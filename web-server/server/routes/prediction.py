@@ -9,13 +9,13 @@ import os
 @app.route('/prediction')
 def zip_prediction():
     timestr = time.strftime("%Y%m%d-%H%M%S")
-    fileName = "prediction.zip".format(timestr)
+    fileName = "prediction.zip"
     memory_file = BytesIO()
     file_path = './../result/prediction'
     with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zipf:
-          for root, dirs, files in os.walk(file_path):
-                    for file in files:
-                              zipf.write(os.path.join(root, file), file)
+        for root, dirs, files in os.walk(file_path):
+            for file in files:
+                zipf.write(os.path.join(root, file), file)
     memory_file.seek(0)
     return send_file(memory_file,
                      attachment_filename=fileName,
