@@ -1,0 +1,31 @@
+Dự đoán giá cổ phiếu là việc mà các nhà kinh tế thường xuyên bị hỏi.
+Tuy nhiên việc dự đoán chính xác là một việc khó có thể làm vì có rất nhiều yếu tố ảnh hưởng.
+Như cổ phiếu của một công ty chịu rất nhiều ảnh hưởng từ hoạt động công ty, chính phủ, quyết định của các nhà đầu tư.
+Một số cá nhân, tổ chức có ảnh hưởng cực kì lớn tới giá cổ phiếu.
+Với sự phát triển của internet thì thông tin được lan truyền rất nhanh, thông tin dường như gây ảnh hưởng đến giá cổ phiếu ngay lập tức
+
+Đối với vàng thì thực sự không có một cá nhân tổ chức nào có thể nắm được quyền lực cụ thể.
+Có rất nhiều nhân tố, một dòng twitter của tổng thống Mỹ Donald Trump không thể nào có những ảnh hưởng đáng kể tới giá vàng như việc tuyên bố cấm cửa Huawei của ông.
+
+Thời trước đã có nhiều phương pháp để dự đoán giá vàng bằng phương pháp xây dựng mô hình thuần thống kê như
+\begin{itemize}
+    \item Autoregressive (AR)
+    \item Moving Average (MA).
+    \item Autoregressive Moving Average (ARMA)
+    \item Autoregressive Integrated Moving Average (ARIMA)
+    \item Seasonal Autoregressive Integrated Moving Average (SARIMA)
+\end{itemize}
+Những phương pháp này yêu cầu người dùng cần có rất nhiều kiến thức để tinh chỉnh tham số, đưa ra các dự đoán
+
+Ngày nay, với sự phát triển của Machine Learning, có nhiều thuật toán mới tiến bộ, không yêu cầu người dùng phải
+có kiến thức rộng lớn như cây quyết định, học sâu.
+
+Trong cây quyết định có thuật toán nổi tiếng như XGBoost, LightGBM. Những thuật toán yêu cầu người dùng có khả năng đưa ra nhiều feature nhất có thể
+để có thể đưa ra dự đoán chính xác
+
+Học sâu có các mạng dòng họ Recurrent Neural Networks thường được sử dụng vì khả năng ghi nhớ thông tin trước đó. Phổ biến nhất là LSTM, GRU. Những thuật toán
+này không cần người dùng đưa ra những feature nhưng những mạng này thường yêu cầu dữ liệu rất nhiệu và sức mạnh tính toán rất lớn để đưa ra dự đoán chính xác.
+
+Gần đây, Facebook có đưa ra thuật toán Prophet. Sử dụng các tham số mặc định, Prophet đưa ra các dự đoán chính xác đánh ngạc nhiên mà không
+tốn nhiều tài nguyên để tính toán.
+

@@ -1,0 +1,15 @@
+Giả sử với những dữ liêu sẵn có, ta có thể bắt đầu công việc xây dựng mô hình dự đoán qua các công đoạn sau:
+\begin{enumerate}
+    \item Phân tích tổng thể dữ liệu \\
+    Do sự tiến bộ về các công cụ và thuật toán machine learning, nên việc xây dựng mô hình dự đoán có thể làm rất nhanh và dễ dàng. Do đó, thay vì dành phần lớn thời gian để thiết kế lại những gì đã có sẵn (mô hình dự đoán), ta dành thời gian đó cho việc quan sát sơ bộ dữ liệu để đánh giá tổng thể về độ tin cây, nhận diện các dữ liệu còn thiếu, các dữ liệu biên, các trường dữ liệu không liên quan đễn vấn đề cần giải quyết. Thời gian nay sẽ giúp chúng ta hiểu rõ hơn dữ liệu mà mình đang làm việc, từ đó có cách tiếp cận đúng trong việc xây dựng mô hình dự đoán, tránh tình trạng mô hình được tạo ra dựa trên các giá trị không thực thế hay không tồn tại, ảnh hướng đến kết quả dự đoán.
+    \item Xử lý sơ bộ dữ liệu (Xử lý liệu biên, dữ liệu bị thiếu) \\
+    Đây được xem là phần chiếm nhiều thời gian nhất, cần những biện pháp thông minh để hoàn tất giai đoạn này. Đây là những cách để chúng ta sử lý những dữ liệu xấu.
+    \begin{itemize}
+	    \item Gán những biến tạm cho các giá trị còn thiếu: các giá trị còn thiếu của một  lượng thông tin có thể cho chúng ta biết nhiều điều. Bằng cách gán các giá trị tạm để mô hình dự đoán biết đó là giá trị còn thiếu có thể cho ra các kết quả chuẩn xác hơn. \\
+	    \item Gán những giá trị còn thiếu bằng giá trị trung bình trong cùng một trường dữ liệu (data imputation). Đây cũng là cách phổ biến để xử lý các dữ liệu còn thiếu. \\
+    \end{itemize}
+    \item Xây dựng mô hình dự đoán \\
+    Sử dụng các công cụ hoặc các thuật toán để xây dụng mô hình dựa trên các dữ liệu đã được xử lý. \\
+    \item Đánh giá sự chính xác của mô hình. \\
+    Đánh giá độ chính xác của các Model dựa các công thức đã sẵn có. \\
+\end{enumerate}

@@ -778,6 +778,8 @@ def do_main(stock_name, config):
         
         print(f'{stock_name} :  save prediction')
         print(f'{stock_name} :  complete')
+        K.clear_session()
+        del df
 
 
 stock_name_list = get_all_stock_name_in_dir(config['data_dir'])
