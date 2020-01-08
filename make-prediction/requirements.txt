@@ -2,3 +2,5 @@ yfinance
 pandas_market_calendars
 joblib
 hyperopt
+plotly
+dill
