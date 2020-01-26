@@ -826,4 +826,7 @@ def do_main(stock_name, config):
 
 stock_name_list = get_all_stock_name_in_dir(config['data_dir'])
 for stock_name in stock_name_list:
-  do_main(stock_name, config)
+    try:
+        do_main(stock_name, config)
+    except:
+        pass

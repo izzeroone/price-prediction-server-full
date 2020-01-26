@@ -11,13 +11,23 @@ def zipdir(path, ziph):
             ziph.write(os.path.join(root, file), file)
 
 if __name__ == '__main__':
-    zip_folder = os.path.realpath('../result/prediction')
+    prediction_folder = os.path.realpath('../result/prediction')
+    history_folder = os.path.realpath('../result/history')
     static_folder = os.path.realpath('../static-file')
-    print(zip_folder)
-    print(static_folder)
-    zip_file_name = os.path.join(static_folder, 'prediction.zip')
-    open(zip_file_name, 'a').close()
-    zipf = zipfile.ZipFile(zip_file_name, 'w', zipfile.ZIP_DEFLATED)
-    zipdir(zip_folder, zipf)
+
+    prediction_file_name = os.path.join(static_folder, 'prediction.zip')
+    # Create empty file
+    open(prediction_file_name, 'w').close()
+
+    zipf = zipfile.ZipFile(prediction_file_name, 'w', zipfile.ZIP_DEFLATED)
+    zipdir(prediction_folder, zipf)
     zipf.close()
+
+    history_file_name = os.path.join(static_folder, 'history.zip')
+    # Create empty file
+    open(history_file_name, 'w').close()
+
+    zipf2 = zipfile.ZipFile(history_file_name, 'w', zipfile.ZIP_DEFLATED)
+    zipdir(history_folder, zipf2)
+    zipf2.close()
 # %%

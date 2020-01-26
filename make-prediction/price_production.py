@@ -50,9 +50,10 @@ import pandas_market_calendars as mcal
 import joblib
 # Hyperopt bayesian optimization
 from hyperopt import hp, Trials, tpe, fmin, STATUS_OK, partial
-
+    
 import json
-
+import traceback
+import dateutil
 # endregion
 
 # Region config config
@@ -72,6 +73,7 @@ config['data_dir'] ="./../data"
 config['model_dir'] = os.path.join(config['root_dir'], 'model')
 config['plot_dir'] = os.path.join(config['root_dir'], 'plot')
 config['prediction_dir'] = os.path.join(config['root_dir'], 'prediction')
+config['history_dir'] = os.path.join(config['root_dir'], 'history')
 config['test_dir'] = os.path.join(config['root_dir'], 'test')
 
 config['input_col'] = ['<Close>', '<Open>', '<High>', '<Low>']
@@ -84,6 +86,7 @@ config['prediction_size'] = 1
 config['sample_display_test_size'] = 5
 # windows size
 config['windows_size'] = 5
+config['history_row'] = 10
 # split config
 config['train_split'] = 0.8
 config['validation_split'] = 0
@@ -318,9 +321,13 @@ def preprocessing_data(df, config = config):
         data_y.append(y.values)
         data_y_time.append(y_time)
 
+    print(f'Data x len {len(data_x)}')
+    print(f'Data y len {len(data_y)}')
+    print(f'Time len {len(data_y_time)}')
     time = pd.concat(data_y_time)
+    time_value = time.values
 
-    return np.array(data_x), np.array(data_y), time.values
+    return np.array(data_x), np.array(data_y), time_value
 
 # endregion
 
@@ -528,6 +535,7 @@ def do_train_untrain(stock_name, df, data, config = config):
     scaled_cols = scaler.transform(df_train[input_col])
     df_train[input_col] = scaled_cols
 
+    print(f'{stock_name} : untrain shape is {df_train.shape}')
     X_train, y_train, time_train = preprocessing_data(df_train, config)
     
     # Reshape data
@@ -574,7 +582,9 @@ def make_future_prediction(stock_name,  df, model, scaler, future_step, config):
         for input_col_name in input_col:
           data_row[input_col_name] = y_pred
 
-        pred_res = pred_res.append(data_row, ignore_index=True )
+        pred_res = pred_res.append(data_row, ignore_index=True)
+
+    pred_res[time_col]  = pd.to_datetime(pred_res[time_col])
 
     return pred_res[windows_size:]
 
@@ -759,12 +769,14 @@ def do_main(stock_name, config):
     else:
         print(f'{stock_name} : load model')
         windows_size = config.get('windows_size')
+        print(f'{stock_name} : windows size {windows_size}')
         last_train_time_path = os.path.join(config['model_dir'], '%s_last_train.txt' % (stock_name))
         last_train_time = joblib.load(last_train_time_path)
         untrain_data = df[df[time_col] > last_train_time]
         if untrain_data.shape[0] > 0:
-          print(f'{stock_name} : train new data')
-          do_train_untrain(stock_name, untrain_data.copy(), train_result ,config)
+          print(f'{stock_name} : train new data : {untrain_data.shape[0]}')
+          # make sure all new data is y
+          do_train_untrain(stock_name, df[-(windows_size + untrain_data.shape[0] + 1):].copy(), train_result ,config)
         
         train_result = load_save_model(stock_name, config)
         
@@ -772,16 +784,40 @@ def do_main(stock_name, config):
         future_predict = make_future_prediction(stock_name, df.copy(), train_result['model'], train_result['scaler'] ,10, config)
         plot_furure_prediction(df, future_predict, stock_name, config)
 
+        # Save prediction
+        print(f'{stock_name} :  save prediction')
         result_dir = config['prediction_dir']
         future_pred_file_path = f'{result_dir}/{stock_name}.csv'
         future_predict.to_csv(future_pred_file_path)
         
-        print(f'{stock_name} :  save prediction')
+        # Append to history, create if not exits
+        print(f'{stock_name} :  save history')
+        history_dir = config['history_dir']
+        history_pred_file_path = f'{history_dir}/{stock_name}.csv'
+        df_future_predict = pd.read_csv(future_pred_file_path, parse_dates=['<DTYYYYMMDD>'])
+        if os.path.exists(history_pred_file_path):
+            history_row = config.get('history_row')
+            # Open and merge
+            
+            df_history = pd.read_csv(history_pred_file_path, parse_dates=['<DTYYYYMMDD>'])
+            # Add current next date prediction to data
+            df_merge = pd.concat([df_history, df_future_predict[0:1]])
+            df_merge.sort_values(by=['<DTYYYYMMDD>'], inplace=True)
+            df_merge.drop_duplicates(subset ='<DTYYYYMMDD>', 
+                                keep = "last", inplace = True) 
+            # Save the last 10 row only
+            df_merge[-history_row:].to_csv(history_pred_file_path)
+        else:
+            # Just save first future predict row
+            df_future_predict[0:1].to_csv(history_pred_file_path)
         print(f'{stock_name} :  complete')
         K.clear_session()
         del df
 
-
 stock_name_list = get_all_stock_name_in_dir(config['data_dir'])
 for stock_name in stock_name_list:
-  do_main(stock_name, config)
+    try:
+        do_main(stock_name, config)
+
+    except Exception:
+        traceback.print_exc()

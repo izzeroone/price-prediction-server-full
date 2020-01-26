@@ -1,0 +1,33 @@
+Việc tìm một hàm số có thể biểu diễn đúng tất cả những điểm giá trị trong tập dữ liệu thị trường chứng khoán vừa mất rất nhiều thời gian, tài nguyên vừa có khả năng cao xảy ra trường hợp overfitting. Thay vào đó, yêu cầu đặt ra là một hàm số biểu diễn càng giống với sự phân bố dữ liệu càng tốt, việc này đòi hỏi ít công sức hơn.
+Ý tưởng của Bayesian Optimization là dựa trên những bộ tham số trước đó để có thể ra quyết định đến bộ tham số tiếp theo, từ đó hàm số sẽ càng được tối ưu hóa theo thời gian.
+Viết theo toán học, việc dựa trên một tập dữ liệu có trước (x) để xây dựng một hàm số với các bộ tham số (y) mô tả bộ dữ liệu đó. Đây là một hàm có điều kiện.
+P(y|x)
+Như đã nói, việc tối ưu xác suất trong thực tế tốn rất nhiều công sức tính toán, thay vào đó, dựa trên quy tắc Bayes, P(x|y) có thể được tính toán bởi:
+P(y|x) = P(x|y)*P(y)/P(x)
+Tham khảo quy tắc Bayes tại link:
+https://machinelearningcoban.com/2017/07/09/prob/#-quy-tac-bayes
+
+Với x không phục thuộc vào tham số (nên giá trị p(x) không thay đổi khi bộ tham số y thay đổi), Gía trị P(y|x) đạt giá trị lớn nhất khi tích P(x|y)*P(y) đạt gía trị lớn nhất. Việc tối ưu vế phải sẽ dễ dàng hơn, tốt ít tài nguyên hơn vế trái của biểu thức.
+
+Lưu ý: Ta có các cách gọi:
+P(x|y): likelihood
+P(y|x): posteriori, hoặc surrogate
+P(y) : prior
+
+Prior có thể hiểu là gía trị “cảm quan” của dữ liệu. Ví dụ, khi tung một đồng xu đồng chất, xác suất để nhận được mặt sấp-ngửa đều là 1/2. Khi gieo một con xúc sắc, giá trị xác suất nhận được mỗi mặt là 1/6. Đây là giá trị xác suất “cảm quan” nhận được ngay cả khi chưa tung đồng xu hay gieo xúc sắc lần nào. Giá trị này được nhận từ những thông tin của chính dữ liệu mang lại
+Có thể hiểu rằng, thay vì dựa trên dữ liệu để tìm ra ngay một hàm số mô tả chính xác bộ dữ liệu đó, ta giả định các bộ dữ liệu một giả thiết biết trước (hàm phân bố dữ liệu, các giá trị được tính toán trên lý thuyết) (prior) và tiến hành tính toán hàm điều kiện likelihood và posterior. Hàm posterior sẽ càng gần với hàm cần tìm sau mỗi vòng lặp cập nhật các tham số.
+
+Nội dung thuật toán:
+1. Choose some prior measure over the space of possible objectives f: Chọn một số điểm theo cảm quan (có thể bằng cách tính toán, kinh nghiệm) là tiệm cận với các điểm nằm trên hàm phân bố dữ liệu cần tìm.
+2. Combine prior and the likelihood to get a posterior measure over the objective given some observations. : Kết hợp giá trị prior và likelihood để tính toán posterior. Posterior thường sử dụng phương pháp Gaussian Process
+3. Use the posterior to decide where to take the next evaluation according to some acquisition/loss function. Thông qua việc tối ưu một hàm acquisition để quyết định vị trí điểm dữ liệu sẽ được đánh giá tiếp theo và cập nhật các tham số cho hàm posterior
+4. Augment the data.: thêm điểm dữ liệu 
+Iterate between 2 and 4 until the evaluation budget is over : vòng lặp từ bước 2 đến bước 4 kết thúc khi hết tài nguyên (hết số vòng lặp, hết thời gian quy định, ...)
+
+Minh hoạ thuật toán bằng hình: 
+http://krasserm.github.io/2018/03/21/bayesian-optimization/
+
+Trong thư viện Python scikit-learn, có thể sử dụng GaussianProcess bằng các gọi hàm GaussianProcessRegressor
+
+
+

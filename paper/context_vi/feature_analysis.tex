@@ -1,0 +1,9 @@
+Đối với mô hình dự đoán đơn giản, một kích thước đầu vào là đủ.
+Tuy nhiên, trong hầu hết các trường hợp, chỉ có một đầu vào không thể đáp ứng
+đòi hỏi sự chính xác. Năm 2015, Kai Chen và Yi Zhou [2] có
+đã xem xét kỹ ảnh hưởng của số lượng đầu vào đến độ chính xác
+trong dự đoán chứng khoán. Từ công việc của họ, người ta có thể thấy rằng
+kích thước đầu vào càng nhiều, độ chính xác sẽ đạt được. Với tất cả 5
+đầu vào open, close, high, low, value có để đưa ra dự đoán. Ngoài ra, các hiệu ứng của số lượng đầu vào được trình bày bởi Ryo Akita [7], khi sử dụng thông tin bằng số và văn bản cho
+dự đoán cổ phiếu. Kết quả là tương tự, càng nhiều độ mờ đầu vào, nhiều yếu tố sẽ được xem xét, cuối cùng sẽ
+dẫn đến kết quả tốt hơn. Tuy vậy trong thực tế có một số đầu vào không có đầy đủ tất cả thông tin cho tất cả các phiên, gây rối loạn cho mô hình. Vì vậy chúng tôi chỉ sử dũng 4 cột đầu vào mà có sự đảm bảo về độ đầy đủ của dữ liệu là open, close, high, low.
